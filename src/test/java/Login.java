@@ -5,67 +5,67 @@ import org.json.JSONObject;
 
 public class Login {
 
-    // URL для основного API запиту
+    // URL для основного API запроса
     private static final String API_URL = "http://chatty.telran-edu.de:8989/api/me";
 
-    // URL для отримання токена (логін)
+    // URL для получения токена (логин)
     private static final String AUTH_URL = "http://chatty.telran-edu.de:8989/api/auth/login";
 
-    // Логін (електронна пошта) та пароль для отримання токена
-    private static final String EMAIL = "Krychkovski@gmail.com";  // Ваша електронна пошта
+    // Логин (электронная почта) и пароль для получения токена
+    private static final String EMAIL = "Krychkovski@gmail.com";  // Ваша электронная почта
     private static final String PASSWORD = "Admintest1";           // Ваш пароль
 
     public static void main(String[] args) {
         try {
-            // Отримуємо новий токен
+            // Получаем новый токен
             String token = getAuthToken();
-            System.out.println("Token: " + token);  // Виводимо токен для перевірки
+            System.out.println("Token: " + token);  // Выводим токен для проверки
 
-            // Виконуємо основний запит з отриманим токеном
+            // Выполняем основной запрос с полученным токеном
             String response = sendGetRequest(API_URL, token);
             System.out.println("Response: " + response);
         } catch (Exception e) {
-            // Якщо виникла помилка, виводимо її
+            // Если возникла ошибка, выводим ее
             System.err.println("Request failed: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
-    // Метод для отримання токена
+    // Метод для получения токена
     private static String getAuthToken() {
-        // Створюємо JSON об'єкт з електронною поштою і паролем
+        // Создаем JSON объект с электронной почтой и паролем
         JSONObject jsonBody = new JSONObject();
-        jsonBody.put("email", EMAIL);  // Вставляємо вашу електронну пошту
-        jsonBody.put("password", PASSWORD);  // Вставляємо ваш пароль
+        jsonBody.put("email", EMAIL);  // Вставляем вашу электронную почту
+        jsonBody.put("password", PASSWORD);  // Вставляем ваш пароль
 
-        // Використовуємо Rest Assured для надсилання POST запиту
+        // Используем Rest Assured для отправки POST запроса
         Response response = RestAssured.given()
                 .contentType(ContentType.JSON)
-                .body(jsonBody.toString()) // Відправляємо JSON тіло запиту
+                .body(jsonBody.toString()) // Отправляем JSON тело запроса
                 .when()
                 .post(AUTH_URL);
 
-        // Виводимо відповідь на отримання токена для діагностики
+        // Выводим ответ на получение токена для диагностики
         System.out.println("Auth Response: " + response.body().asString());
 
-        // Перевіряємо, чи успішно отримано токен
+        // Проверяем, успешно ли получен токен
         if (response.statusCode() == 200) {
-            // Отримуємо правильний токен з поля "accessToken"
+            // Получаем правильный токен из поля "accessToken"
             return response.jsonPath().getString("accessToken");
         } else {
             throw new RuntimeException("Failed to authenticate: " + response.statusCode() + " " + response.body().asString());
         }
     }
 
-    // Метод для надсилання GET-запиту з токеном
+    // Метод для отправки GET-запроса с токеном
     private static String sendGetRequest(String url, String token) {
-        // Використовуємо Rest Assured для надсилання GET запиту з авторизацією
+        // Используем Rest Assured для отправки GET запроса с авторизацией
         Response response = RestAssured.given()
-                .header("Authorization", "Bearer " + token)  // Додаємо токен в заголовок
+                .header("Authorization", "Bearer " + token)  // Добавляем токен в заголовок
                 .when()
                 .get(url);
 
-        // Перевіряємо, чи запит був успішним
+        // Проверяем, был ли запрос успешным
         if (response.statusCode() == 200) {
             return response.body().asString();
         } else {
