@@ -1,40 +1,39 @@
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
+import org.junit.jupiter.api.Test;
 
 public class MeApiTest extends LoginTest {
 
-    // URL for the main API request
     private static final String API_URL = "http://chatty.telran-edu.de:8989/api/me";
 
+    @Test
     public static void main(String[] args) {
         try {
-            // Get the authentication token from the parent class
+            // Получение токена аутентификации
             String token = getAuthToken();
-            System.out.println("Token: " + token);  // Print token for verification
+            System.out.println("Token: " + token);
 
-            // Perform the API request with the obtained token
+            // Выполнение API-запроса с полученным токеном
             String response = sendGetRequest(API_URL, token);
             System.out.println("API Response: " + response);
+
         } catch (Exception e) {
-            // If an error occurs, print it
-            System.err.println("Request failed: " + e.getMessage());
+            System.err.println("Запрос не выполнен: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
-    // Method to send a GET request with the provided token
     private static String sendGetRequest(String url, String token) {
-        // Use Rest Assured to send the GET request with the token in the Authorization header
         Response response = RestAssured.given()
                 .header("Authorization", "Bearer " + token)
                 .when()
                 .get(url);
 
-        // Check if the request was successful
         if (response.statusCode() == 200) {
+            // Возвращение необработанного ответа API в виде строки
             return response.body().asString();
         } else {
-            throw new RuntimeException("Request failed: " + response.statusCode() + " " + response.body().asString());
+            throw new RuntimeException("Запрос не выполнен: " + response.statusCode() + " " + response.body().asString());
         }
     }
 }
