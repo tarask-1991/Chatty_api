@@ -1,7 +1,6 @@
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.json.JSONObject;
-import org.junit.jupiter.api.Test;
 
 public class UserPosts extends LoginTest {
 
@@ -9,7 +8,6 @@ public class UserPosts extends LoginTest {
     private static final String API_URL = "http://chatty.telran-edu.de:8989/api/me";
     private static final String POSTS_API_BASE_URL = "http://chatty.telran-edu.de:8989/api/users/";
 
-    @Test
     public static void main(String[] args) {
         try {
             // Получаем токен аутентификации
