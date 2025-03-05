@@ -7,7 +7,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+public class UserResponse {
     private String id;
     private String name;
     private String surname;
@@ -18,5 +18,5 @@ public class User {
     private String birthDate;
     private String avatarUrl;
     private String backgroundUrl;
-    private boolean blocked;  // Додаємо статус "заблоковано"
+    private boolean blocked;
 }
